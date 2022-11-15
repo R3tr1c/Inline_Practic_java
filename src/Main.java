@@ -19,7 +19,6 @@ public class Main {
                 case 0 -> m_return = C_date.d_functions();
                 default -> System.out.println("Ошибка ввода! Попробуйте еще.");
 
-//                    inp_scan.next();
             }
         }
     }

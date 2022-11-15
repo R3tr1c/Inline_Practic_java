@@ -52,32 +52,50 @@ public class C_date {
         System.out.println("\n");
         return 221;
     }
-    public static void date_format(){
-
+    public static int date_format(int inp_day, int inp_month, int inp_year){
+        int chsd_pattern = 0;
+        String corr_year, corr_month, corr_day;
+        System.out.println("Выберите шаблон из представленных далее[введите 0 для возврата к выбору функции]:\n1) YYYY-MM-DD;\n2) YY-MM-DD;\n");
+        Scanner set_pattern = new Scanner(System.in);
+        chsd_pattern = set_pattern.nextInt();
+        if ((chsd_pattern - 1) == -1 ){
+            System.out.println("Возврат...");
+            return 331;
+        } else if ((chsd_pattern - 1) == 0 || (chsd_pattern - 1) == 1) {
+            corr_year = Integer.toString(inp_year);
+            corr_month = Integer.toString(inp_month);
+            corr_day = Integer.toString(inp_day);
+            if (corr_month.length() == 1){ corr_month = "0" + corr_month;  }
+            if (corr_day.length() == 1){ corr_day = "0" + corr_day;  }
+            if ((chsd_pattern - 1) == 0) { while (corr_year.length() < 4){ corr_year = "0" + corr_year; } }
+            else { if (corr_year.length() < 2) { corr_year = "0" + corr_year; }
+                   else if (corr_year.length() > 2) { while (corr_year.length() != 2) { corr_year = corr_year.substring(1); } }}
+            System.out.println("Результат: " + corr_year + "-" + corr_month + "-" + corr_day + "\n");
+        }
+        return 331;
     }
     public static int d_functions () {
         int m_return = 1, fm_return = 0, check_back = 99, day = 0, month = 0, year = 0, mode = 0;
-//        char[] tmp_dat;
-        String inp_str_dat;
+        String inp_str_date;
         boolean check_str_dat = false, check_leap_y = false;
         Pattern inp_dat_pat = Pattern.compile("^\\d{2}\\W\\d{2}\\W\\d{4}$", Pattern.CASE_INSENSITIVE);
         System.out.println("\nПрактическая работа №1.");
         Scanner mode_inp = new Scanner(System.in);
         System.out.println("\n");
-        while (fm_return == 0 || fm_return == 211 || fm_return == 221) {
+        while (fm_return == 0 || fm_return == 211 || fm_return == 221 || fm_return == 331) {
             System.out.println("Введите дату в начальном формате dd.mm.yyyy [введите 0 для возврата]: ");
-            inp_str_dat = mode_inp.next();
-            check_back = Integer.parseInt(inp_str_dat.substring(0,1));
-            if (check_back == 0 && inp_str_dat.length() == 1) {
+            inp_str_date = mode_inp.next();
+            check_back = Integer.parseInt(inp_str_date.substring(0,1));
+            if (check_back == 0 && inp_str_date.length() == 1) {
                 System.out.println("Возврат...");
                 fm_return = 99;
                 break;
             }
-            check_str_dat = Pattern.matches(inp_dat_pat.pattern(), inp_str_dat);
-            if (check_str_dat && inp_str_dat.charAt(2) == '.' && inp_str_dat.charAt(5) == '.') {
-                day = Integer.parseInt(inp_str_dat.substring(0, 2));
-                month = Integer.parseInt(inp_str_dat.substring(3, 5));
-                year = Integer.parseInt(inp_str_dat.substring(6));
+            check_str_dat = Pattern.matches(inp_dat_pat.pattern(), inp_str_date);
+            if (check_str_dat && inp_str_date.charAt(2) == '.' && inp_str_date.charAt(5) == '.') {
+                day = Integer.parseInt(inp_str_date.substring(0, 2));
+                month = Integer.parseInt(inp_str_date.substring(3, 5));
+                year = Integer.parseInt(inp_str_date.substring(6));
                 if (((day > 0 && day < 32) && (month > 0 && month < 13) && (year > 0))) {
                     check_leap_y = year % 4 == 0 && (year % 400 == 0 || year % 100 != 0);
                     if (check_leap_y) { System.out.println("\nГод: високосный.\n");}
@@ -91,19 +109,11 @@ public class C_date {
                         System.out.println("Выберите функцию [введите 0 для возврата к вводу даты]:\n1) Определить день недели;\n2) Число дней в месяце;\n3) Форматирование выбранной даты;");
                         mode = mode_inp.nextInt();
                         if (mode - 1 == -1) { break; }
-                        switch (mode - 1){
-                            case 0:
-                                fm_return = C_date.d_week_d_num(day, month, year);
-                                break;
-                            case 1:
-                                fm_return = C_date.day_count(month, check_leap_y);
-                                break;
-                            case 2:
-                                System.out.println("Tst3");
-                                break;
-                            default:
-                                System.out.println("Ошибка выбора функции! Попробуйте еще раз.");
-                                break;
+                        switch (mode - 1) {
+                            case 0 -> fm_return = C_date.d_week_d_num(day, month, year);
+                            case 1 -> fm_return = C_date.day_count(month, check_leap_y);
+                            case 2 -> fm_return = C_date.date_format(day, month, year);
+                            default -> System.out.println("Ошибка выбора функции! Попробуйте еще раз.");
                         }
                         if (fm_return == 212) {
                             System.out.println("Ошибка в функции расчета дня недели!");
@@ -117,7 +127,6 @@ public class C_date {
                 System.out.println("Ошибка формата введенной даты! Попробуйте еще раз.");
             }
         }
-//        mode_inp.close();
         return m_return;
     }
 
